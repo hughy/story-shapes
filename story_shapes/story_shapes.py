@@ -6,39 +6,38 @@ from typing import List
 
 from transformers import pipeline
 
-from story_shapes.plot import plot_shape
+from story_shapes.plot import plot_story_shape
 
 START_OF_STORY = "*** START OF THIS PROJECT GUTENBERG EBOOK"
 END_OF_STORY = "*** END OF THIS PROJECT GUTENBERG EBOOK"
 
 
-def main(story_path: str) -> None:
+def main(story_path: str, story_title: str, shape_path: str) -> None:
+    """Plots the shape of a story.
+
+    Uses a pretrained sentiment analysis pipeline to compute the sentiment of
+    segments of the story. The shape of the story is a plot of a rolling
+    average of the story sentiment over a fixed-size window of segments.
+    """
     sentiment_analyzer = pipeline("sentiment-analysis")
     tokenizer = sentiment_analyzer.tokenizer
 
-    segments = iter_segments(story_path, tokenizer, 50)
+    window_length = 40
+    story_segments = iter_segments(story_path, tokenizer, 256)
 
     sentiments = []
-    for window in iter_windows(segments, 5):
-        window_text = "\n".join(window)
-        window_sentiment = sentiment_analyzer(window_text)[0]
-        if window_sentiment["label"] == "POSITIVE":
-            sentiments.append(window_sentiment["score"])
-        else:
-            sentiments.append(-window_sentiment["score"])
-
-    plot_shape(sentiments)
-
-
-def iter_windows(segments: Iterator[str], window_length: int) -> Iterator[List[str]]:
-    """Yields a sliding window of `window_length` segments.
-    """
     queue = deque()
-    for segment in segments:
-        queue.append(segment)
+    for segment in story_segments:
+        segment_sentiment = sentiment_analyzer(segment)[0]
+        if segment_sentiment["label"] == "POSITIVE":
+            queue.append(segment_sentiment["score"])
+        else:
+            queue.append(-segment_sentiment["score"])
         if len(queue) == window_length:
-            yield deepcopy(queue)
+            sentiments.append(sum(queue) / window_length)
             queue.popleft()
+
+    plot_story_shape(sentiments, story_title, shape_path)
 
 
 def iter_segments(story_path: str, tokenizer, segment_length: int) -> Iterator[str]:
@@ -81,4 +80,4 @@ def get_token_count(tokenizer, text: str) -> int:
 
 
 if __name__ == "__main__":
-    main("beowulf.txt")
+    main("anna_karenina.txt", "anna karenina", "anna_karenina_shape.png")

@@ -1,3 +1,5 @@
+from typing import List
+
 from matplotlib import pyplot as plt
 
 def plot_story_shape(sentiments: List[float], title: str, shape_path: str) -> None:

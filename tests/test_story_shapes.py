@@ -4,7 +4,7 @@ from story_shapes import __version__
 from story_shapes.story_shapes import END_OF_STORY
 from story_shapes.story_shapes import START_OF_STORY
 from story_shapes.story_shapes import iter_segments
-from story_shapes.story_shapes import iter_windows
+#from story_shapes.story_shapes import iter_windows
 
 
 def test_version():
@@ -36,9 +36,10 @@ def test_iter_segments(tmpdir):
     assert len(segments) == 3
 
 
-def test_iter_windows():
-    test_segments = range(10)
-
-    windows_list = list(iter_windows(test_segments, 4))
-    assert len(windows_list) == 7
-    assert all(len(window) == 4 for window in windows_list)
+#def test_iter_windows():
+#    test_segments = range(10)
+#
+#    windows_list = list(iter_windows(test_segments, 4))
+#    assert len(windows_list) == 7
+#    assert all(len(window) == 4 for window in windows_list)
+#
