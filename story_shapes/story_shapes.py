@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from collections import deque
-from copy import deepcopy
 from typing import Iterator
 from typing import List
 
@@ -24,24 +23,35 @@ def main(story_path: str, story_title: str, shape_path: str) -> None:
 
     story_segments = iter_segments(story_path, tokenizer, 450)
     story_sentiments = iter_sentiments(sentiment_analyzer, story_segments)
-    sentiment_averages = get_rolling_averages(story_sentiments, 20)
+    sentiment_averages = get_rolling_averages(story_sentiments, 10, 5)
 
     plot_story_shape(sentiment_averages, story_title, shape_path)
 
 
-def get_rolling_averages(values: List[float], window_length: int) -> List[float]:
+def get_rolling_averages(
+    values: Iterator[float], window_length: int, window_stride: int = 1
+) -> List[float]:
     """Computes a list of rolling averages of `values`.
 
     Each rolling average is the average over a window of `window_length`
-    values from `values`.
+    values from `values`. The value of `window_stride` gives the number of
+    values that the window advances by in each step.
     """
     averages = []
     queue = deque()
+    value_count = 0
     for value in values:
+        value_count += 1
         queue.append(value)
         if len(queue) == window_length:
             averages.append(sum(queue) / window_length)
-            queue.popleft()
+            for _ in range(window_stride):
+                queue.popleft()
+
+    # add any remaining partial window average
+    expected_windows = (value_count - window_length) / window_stride + 1
+    if len(averages) < expected_windows:
+        averages.append(sum(queue) / len(queue))
 
     return averages
 
@@ -93,6 +103,7 @@ def iter_segments(story_path: str, tokenizer, segment_length: int) -> Iterator[s
 
 def get_token_count(tokenizer, text: str) -> int:
     tokenized_text = tokenizer(text)
+    # subtract two for start and end tokens
     return len(tokenized_text["input_ids"]) - 2
 
 

@@ -42,6 +42,18 @@ def test_get_rolling_averages():
     rolling_averages = get_rolling_averages(test_values, 1)
     assert rolling_averages == list(test_values)
     rolling_averages = get_rolling_averages(test_values, 3)
-    assert rolling_averages == [(0 + 1 + 2) / 3, (1 + 2 + 3) / 3, (2 + 3 + 4) / 3, (3 + 4 + 5) / 3]
+    assert rolling_averages == [
+        (0 + 1 + 2) / 3,
+        (1 + 2 + 3) / 3,
+        (2 + 3 + 4) / 3,
+        (3 + 4 + 5) / 3,
+    ]
     rolling_averages = get_rolling_averages(test_values, 6)
     assert rolling_averages == [2.5]
+
+
+def test_get_rolling_averages_stride():
+    test_values = range(6)
+
+    rolling_averages = get_rolling_averages(test_values, 3, 2)
+    assert rolling_averages == [(0 + 1 + 2) / 3, (2 + 3 + 4) / 3, (4 + 5) / 2]
