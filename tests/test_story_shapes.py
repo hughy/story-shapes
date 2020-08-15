@@ -8,7 +8,7 @@ from story_shapes.story_shapes import iter_windows
 
 
 def test_version():
-    assert __version__ == '0.1.0'
+    assert __version__ == "0.1.0"
 
 
 def test_iter_segments(tmpdir):
@@ -17,8 +17,12 @@ def test_iter_segments(tmpdir):
     test_story = "The\nquick\nbrown\nfox\njumped\nover\nthe\nlazy\ndog."
     post_story = "The\nlazy\ndog\nbarked."
 
-    test_text = "\n".join([pre_story, START_OF_STORY, test_story, END_OF_STORY, post_story])
-    test_tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased-finetuned-sst-2-english")
+    test_text = "\n".join(
+        [pre_story, START_OF_STORY, test_story, END_OF_STORY, post_story]
+    )
+    test_tokenizer = AutoTokenizer.from_pretrained(
+        "distilbert-base-uncased-finetuned-sst-2-english"
+    )
 
     test_path = tmpdir / "test.txt"
     with open(test_path, "w+") as f:
