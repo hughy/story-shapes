@@ -22,22 +22,39 @@ def main(story_path: str, story_title: str, shape_path: str) -> None:
     sentiment_analyzer = pipeline("sentiment-analysis")
     tokenizer = sentiment_analyzer.tokenizer
 
-    window_length = 40
-    story_segments = iter_segments(story_path, tokenizer, 256)
+    story_segments = iter_segments(story_path, tokenizer, 450)
+    story_sentiments = iter_sentiments(sentiment_analyzer, story_segments)
+    sentiment_averages = get_rolling_averages(story_sentiments, 20)
 
-    sentiments = []
+    plot_story_shape(sentiment_averages, story_title, shape_path)
+
+
+def get_rolling_averages(values: List[float], window_length: int) -> List[float]:
+    """Computes a list of rolling averages of `values`.
+
+    Each rolling average is the average over a window of `window_length`
+    values from `values`.
+    """
+    averages = []
     queue = deque()
-    for segment in story_segments:
-        segment_sentiment = sentiment_analyzer(segment)[0]
-        if segment_sentiment["label"] == "POSITIVE":
-            queue.append(segment_sentiment["score"])
-        else:
-            queue.append(-segment_sentiment["score"])
+    for value in values:
+        queue.append(value)
         if len(queue) == window_length:
-            sentiments.append(sum(queue) / window_length)
+            averages.append(sum(queue) / window_length)
             queue.popleft()
 
-    plot_story_shape(sentiments, story_title, shape_path)
+    return averages
+
+
+def iter_sentiments(sentiment_analyzer, segments: Iterator[str]) -> Iterator[float]:
+    """Generates the sentiment score for each segment in `segments`.
+    """
+    for segment in segments:
+        segment_sentiment = sentiment_analyzer(segment)[0]
+        if segment_sentiment["label"] == "POSITIVE":
+            yield segment_sentiment["score"]
+        else:
+            yield -segment_sentiment["score"]
 
 
 def iter_segments(story_path: str, tokenizer, segment_length: int) -> Iterator[str]:
@@ -80,4 +97,4 @@ def get_token_count(tokenizer, text: str) -> int:
 
 
 if __name__ == "__main__":
-    main("anna_karenina.txt", "anna karenina", "anna_karenina_shape.png")
+    main("wizard_of_oz.txt", "wizard of oz", "wizard_of_oz_shape.png")

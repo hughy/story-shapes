@@ -4,7 +4,7 @@ from story_shapes import __version__
 from story_shapes.story_shapes import END_OF_STORY
 from story_shapes.story_shapes import START_OF_STORY
 from story_shapes.story_shapes import iter_segments
-#from story_shapes.story_shapes import iter_windows
+from story_shapes.story_shapes import get_rolling_averages
 
 
 def test_version():
@@ -36,10 +36,12 @@ def test_iter_segments(tmpdir):
     assert len(segments) == 3
 
 
-#def test_iter_windows():
-#    test_segments = range(10)
-#
-#    windows_list = list(iter_windows(test_segments, 4))
-#    assert len(windows_list) == 7
-#    assert all(len(window) == 4 for window in windows_list)
-#
+def test_get_rolling_averages():
+    test_values = range(6)
+
+    rolling_averages = get_rolling_averages(test_values, 1)
+    assert rolling_averages == list(test_values)
+    rolling_averages = get_rolling_averages(test_values, 3)
+    assert rolling_averages == [(0 + 1 + 2) / 3, (1 + 2 + 3) / 3, (2 + 3 + 4) / 3, (3 + 4 + 5) / 3]
+    rolling_averages = get_rolling_averages(test_values, 6)
+    assert rolling_averages == [2.5]

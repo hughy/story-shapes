@@ -49,7 +49,7 @@ def plot_story_shape(sentiments: List[float], title: str, shape_path: str) -> No
         )
         ax.annotate(
             title.upper(),
-            xy=(0.75, -0.1),
+            xy=(0.5, -0.1),
             va="bottom",
             fontsize=16,
             xycoords="axes fraction",
