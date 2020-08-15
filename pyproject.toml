@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "story-arcs"
+name = "story-shapes"
 version = "0.1.0"
 description = ""
 authors = ["Hugh Cunningham <hugh.e.cunningham@gmail.com>"]
