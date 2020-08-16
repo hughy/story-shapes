@@ -12,7 +12,7 @@ START_OF_STORY = "*** START OF THIS PROJECT GUTENBERG EBOOK"
 END_OF_STORY = "*** END OF THIS PROJECT GUTENBERG EBOOK"
 
 
-def main(story_path: str, story_title: str, shape_path: str) -> None:
+def graph_story_shape(story_path: str, story_title: str, shape_path: str) -> None:
     """Plots the shape of a story.
 
     Uses a pretrained sentiment analysis pipeline to compute the sentiment of
@@ -122,4 +122,4 @@ if __name__ == "__main__":
         "--shape-path", type=str, help="Filepath to write the shape graph to.",
     )
     args = parser.parse_args()
-    main(args.story_path, args.title, args.shape_path)
+    graph_story_shape(args.story_path, args.title, args.shape_path)
