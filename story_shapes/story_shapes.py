@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import argparse
 from collections import deque
 from typing import Iterator
 from typing import List
@@ -108,4 +109,17 @@ def get_token_count(tokenizer, text: str) -> int:
 
 
 if __name__ == "__main__":
-    main("wizard_of_oz.txt", "wizard of oz", "wizard_of_oz_shape.png")
+    parser = argparse.ArgumentParser(
+        description="Generate a graph of the shape of a story a la Kurt Vonnegut."
+    )
+    parser.add_argument(
+        "--story-path", type=str, help="Filepath to read the story from."
+    )
+    parser.add_argument(
+        "--title", type=str, help="The title of the story",
+    )
+    parser.add_argument(
+        "--shape-path", type=str, help="Filepath to write the shape graph to.",
+    )
+    args = parser.parse_args()
+    main(args.story_path, args.title, args.shape_path)
