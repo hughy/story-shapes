@@ -54,6 +54,7 @@ def get_rolling_averages(
     if len(averages) < expected_windows:
         averages.append(sum(queue) / len(queue))
 
+
     return averages
 
 
@@ -83,6 +84,10 @@ def iter_segments(story_path: str, tokenizer, segment_length: int) -> Iterator[s
         while line := f.readline():
             if line.startswith(START_OF_STORY):
                 break
+
+        # reset file to the start if file doesn't contain START_OF_STORY
+        if not line.startswith(START_OF_STORY):
+            f.seek(0, 0)
 
         segment = ""
         segment_tokens = 0
