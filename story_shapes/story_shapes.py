@@ -54,7 +54,6 @@ def get_rolling_averages(
     if len(averages) < expected_windows:
         averages.append(sum(queue) / len(queue))
 
-
     return averages
 
 
