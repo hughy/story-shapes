@@ -67,3 +67,37 @@ This first approach also suggests a drawback of using a pretrained sentiment ana
 ### Related work
 
 [*The emotional arcs of stories are dominated by six basic shapes*](https://arxiv.org/abs/1606.07772) by Reagan et. al provides a much more thorough exploration of computational approaches to the shapes of stories.
+
+## Try it yourself!
+
+If you'd like to play around with this program yourself you can do so either via a command-line program or in a Python shell.
+
+### Setup
+
+⚠️ This project requires Python >= 3.8.
+
+After cloning the repository run the following commands to initialize a Python virtual environment and install dependencies:
+
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+
+### Usage
+
+Run the command-line program with
+
+    python -m story_shapes.story_shapes
+
+The command-line usage is shown below
+
+    usage: story_shapes.py [-h] [--story-path STORY_PATH] [--title TITLE] [--shape-path SHAPE_PATH]
+
+    Generate a graph of the shape of a story a la Kurt Vonnegut.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --story-path STORY_PATH
+                            Filepath to read the story from.
+      --title TITLE         The title of the story
+      --shape-path SHAPE_PATH
+                            Filepath to write the shape graph to.
